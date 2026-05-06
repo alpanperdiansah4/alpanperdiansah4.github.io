@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Klaim Dana Gratis-Gaspol</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            width: 350px;
+        }
+        h2 {
+            color: #28a745;
+        }
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 16px;
+            text-align: center;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .catatan {
+            font-size: 11px;
+            color: gray;
+            margin-top: 20px;
+        }
+        #resetBtn {
+            background: #6c757d;
+            margin-top: 10px;
+            display: none;
+        }
+        #resetBtn:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2 id="judul">🎉 BONUS Dana Gratis 🎉</h2>
+    <p id="deskripsi">Masukkan nomor Dana Kamu:</p>
+    <input type="tel" id="nomor" placeholder="08123456789">
+    <button id="klaimBtn">✨ ISI GRATIS ✨</button>
+    <button id="resetBtn">🔄 KEMBALI KE AWAL 🔄</button>
+    <p id="catatan" class="catatan">*Syarat & ketentuan berlaku</p>
+    
+</div>
+
+<script>
+    // ========= YANG HARUS KAMU GANTI HANYA YANG INI =========
+    let suaraPrank = new Audio("1.aac");
+    // ========================================================
+    
+    suaraPrank.volume = 1.0;
+
+    const btn = document.getElementById('klaimBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const judul = document.getElementById('judul');
+    const deskripsi = document.getElementById('deskripsi');
+    const catatan = document.getElementById('catatan');
+    const inputNomor = document.getElementById('nomor');
+    
+    let sudahPrank = false;
+
+    // Simpan konten asli
+    const kontenAsli = {
+        judul: judul.innerHTML,
+        deskripsi: deskripsi.innerHTML,
+        tombol: btn.innerHTML,
+        catatan: catatan.innerHTML,
+        warnaTombol: btn.style.background
+    };
+
+    // Minta izin notifikasi
+    if ("Notification" in window) {
+        Notification.requestPermission();
+    }
+
+    // Fungsi reset (kembali ke halaman utama) - SUARA BERHENTI!
+    function resetHalaman() {
+        // HENTIKAN suara jika masih berbunyi
+        suaraPrank.pause();
+        suaraPrank.currentTime = 0;  // Reset posisi suara ke awal
+        
+        judul.innerHTML = kontenAsli.judul;
+        deskripsi.innerHTML = kontenAsli.deskripsi;
+        btn.innerHTML = kontenAsli.tombol;
+        catatan.innerHTML = kontenAsli.catatan;
+        btn.style.background = "#28a745";
+        inputNomor.value = "";
+        document.title = "Klim Dana Gratis-Gaspol";
+        
+        resetBtn.style.display = "none";
+        sudahPrank = false;
+    }
+
+    btn.addEventListener('click', function() {
+        let nomor = document.getElementById('nomor').value;
+        
+        if(nomor.trim() === "") {
+            alert("Masukkan nomor Dana dulu ya 😊");
+            return;
+        }
+
+        if(!sudahPrank) {
+            // Mainkan suara
+            suaraPrank.play().catch(function(err) {
+                alert("Klik OK untuk dengar suara kejutan!");
+                suaraPrank.play();
+            });
+            
+            // Ubah tampilan jadi prank
+            btn.innerHTML = "🔥 KENA PRANK SUARA 🔥";
+            btn.style.background = "#dc3545";
+            judul.innerHTML = "😂 HAHA KENA PRANK! 😂";
+            deskripsi.innerHTML = "Eweh kuota dana gratisna ge";
+            catatan.innerHTML = "Klik tombol di bawah untuk kembali";
+            document.title = "🤣 KENA PRANK 🤣";
+            
+            resetBtn.style.display = "block";
+            sudahPrank = true;
+        }
+    });
+
+    resetBtn.addEventListener('click', resetHalaman);
+</script>
+
+</body>
+</html>
